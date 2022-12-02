@@ -37,25 +37,43 @@ func part1(t *bufio.Scanner) {
 
 }
 
+func smallest(m map[int]int) (int, int) {
+	var lv int
+	var p int
+	cc := 0
+	for k, v := range m {
+		if cc == 0 {
+			lv = v
+			p = k
+			cc++
+			continue
+		}
+		if v < lv {
+			lv = v
+			p = k
+		}
+	}
+
+	return lv, p
+}
+
 func part2(t *bufio.Scanner) {
 
 	l := make(map[int]int)
 	tt := 0
-	ll := 1
+	ll := 0
 
 	for t.Scan() {
 		n := t.Text()
 		if len(n) == 0 {
 			if len(l) >= 3 {
-				for k, v := range l {
-					if tt > v {
-						l[k] = tt
-						tt = 0
-						break
-					} else {
-						continue
-					}
+				s, p := smallest(l)
+				if tt > s {
+					l[p] = tt
+					tt = 0
+					continue
 				}
+
 			} else {
 				l[ll] = tt
 				ll++
@@ -66,6 +84,6 @@ func part2(t *bufio.Scanner) {
 		tt = c_i + tt
 	}
 
-	fmt.Println(l[1] + l[2] + l[3])
+	fmt.Println(l[0] + l[1] + l[2])
 
 }
