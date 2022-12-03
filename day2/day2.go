@@ -68,14 +68,12 @@ func part2(t *bufio.Scanner) {
 				if c[k] == s[0] {
 					total = total + b[k] + 6
 				}
-				continue
 			}
 		case "X":
 			for k := range c {
 				if k == s[0] {
 					total = total + b[c[k]]
 				}
-				continue
 			}
 
 		}
