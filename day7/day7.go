@@ -17,7 +17,11 @@ func main() {
 
 }
 
-func returnContentsOfDirectory(dir string, pos int, fp string) int {
+//the solution here sits in the counter (levels). in the main function, iterate over the document, and when "cd xx" is found,
+//call the function below with its position in the txt file and the dir name. Increase count when cd xx occurs, and increase the size
+//whenever a file is found. reduce count when cd .. occurs. When counter == 0, we're back to the root of the directory, and can return
+//the size of the dir.
+func returnSizeOfDirectory(dir string, pos int, fp string) int {
 
 	var size int
 	var in_folder bool
@@ -68,7 +72,6 @@ func part1_and_2(t *bufio.Scanner, fp string) {
 
 	var results []int
 	var sum int
-
 	counter := 0
 
 	for t.Scan() {
@@ -79,7 +82,7 @@ func part1_and_2(t *bufio.Scanner, fp string) {
 			if split[2] == ".." {
 				continue
 			}
-			directory_size := returnContentsOfDirectory(split[2], counter, fp)
+			directory_size := returnSizeOfDirectory(split[2], counter, fp)
 			results = append(results, directory_size)
 		}
 	}
@@ -91,10 +94,8 @@ func part1_and_2(t *bufio.Scanner, fp string) {
 	}
 
 	fmt.Println(sum) //part 1
-
 	unused_space := 70000000 - results[0]
 	space_needed := 30000000 - unused_space
-
 	var directories_worth_deleting []int
 
 	for _, v := range results {
