@@ -10,20 +10,21 @@ import (
 
 func main() {
 
-	open, _ := os.Open("input.txt")
+	fp := "input.txt"
+	open, _ := os.Open(fp)
 	txt := bufio.NewScanner(open)
-	part1_and_2(txt)
+	part1_and_2(txt, fp)
 
 }
 
-func returnContentsOfDirectory(dir string, pos int) int {
+func returnContentsOfDirectory(dir string, pos int, fp string) int {
 
 	var size int
 	var in_folder bool
 	var levels int
 	counter := 0
 
-	open_2, _ := os.Open("input.txt")
+	open_2, _ := os.Open(fp)
 	te := bufio.NewScanner(open_2)
 
 	for te.Scan() {
@@ -63,7 +64,7 @@ func returnContentsOfDirectory(dir string, pos int) int {
 	return size
 }
 
-func part1_and_2(t *bufio.Scanner) {
+func part1_and_2(t *bufio.Scanner, fp string) {
 
 	var results []int
 	var sum int
@@ -78,7 +79,7 @@ func part1_and_2(t *bufio.Scanner) {
 			if split[2] == ".." {
 				continue
 			}
-			directory_size := returnContentsOfDirectory(split[2], counter)
+			directory_size := returnContentsOfDirectory(split[2], counter, fp)
 			results = append(results, directory_size)
 		}
 	}
