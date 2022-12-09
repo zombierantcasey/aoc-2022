@@ -76,7 +76,7 @@ func part1(t *bufio.Scanner) {
 	fmt.Println(current_score) // part 2
 }
 
-//these are pretty long and go definitely be simplified. the solution is fine, but it can be shortened
+//these are pretty long and could definitely be simplified. the solution is fine, but it can be shortened
 func returnTreeScore(row, position int, trees [][]int) int {
 
 	down_row := row
