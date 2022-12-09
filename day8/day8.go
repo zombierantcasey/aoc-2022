@@ -60,8 +60,7 @@ func part1(t *bufio.Scanner) {
 		}
 	}
 
-	fmt.Println(trees)
-
+	fmt.Println(trees) // part 1
 	var current_score int
 
 	for v := range total_scores {
@@ -74,9 +73,10 @@ func part1(t *bufio.Scanner) {
 
 	}
 
-	fmt.Println(current_score)
+	fmt.Println(current_score) // part 2
 }
 
+//these are pretty long and go definitely be simplified. the solution is fine, but it can be shortened
 func returnTreeScore(row, position int, trees [][]int) int {
 
 	down_row := row
