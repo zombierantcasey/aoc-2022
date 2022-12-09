@@ -17,10 +17,11 @@ func main() {
 
 }
 
-//the solution here sits in the counter (levels). in the main function, iterate over the document, and when "cd xx" is found,
-//call the function below with its position in the txt file and the dir name. Increase count when cd xx occurs, and increase the size
-//whenever a file is found. reduce count when cd .. occurs. When counter == 0, we're back to the root of the directory, and can return
-//the size of the dir.
+//the solution here sits in counting the levels when we cd into a dir. In the main function, iterate over the document, and when "cd xx" is found,
+//call the function below with its position in the txt file and the dir name. Iterate to the position,
+//Increase count when cd xx occurs, and increase the size whenever a file is found. reduce count when cd .. occurs. When levels == 0,
+//we're back to the root of that directory, and can return the size of the dir. Main loop does this for every directory and sizes are stored
+//in a slice.
 func returnSizeOfDirectory(dir string, pos int, fp string) int {
 
 	var size int
