@@ -63,7 +63,6 @@ func returnSizeOfDirectory(dir string, pos int, fp string) int {
 			}
 
 			if levels == 0 {
-				fmt.Println(size, dir)
 				break
 			}
 		}
@@ -101,8 +100,7 @@ func part1_and_2(t *bufio.Scanner, fp string) {
 	space_needed := 30000000 - unused_space
 	var directories_worth_deleting []int
 
-	//could be a single loop
-	for _, v := range results {
+	for _, v := range results { //part 2 could be a single loop
 		if v > space_needed {
 			directories_worth_deleting = append(directories_worth_deleting, v)
 		}
