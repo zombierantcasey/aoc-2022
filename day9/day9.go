@@ -10,7 +10,7 @@ import (
 
 func main() {
 
-	open, _ := os.Open("input.txt")
+	open, _ := os.Open("test.txt")
 	txt := bufio.NewScanner(open)
 	part1(txt)
 
@@ -43,6 +43,7 @@ func part1(t *bufio.Scanner) {
 		direction := s[0]
 		movement, _ := strconv.Atoi(s[1])
 		h_h, h_l, t_h, t_l = addToMap(direction, movement, h_map, t_map, h_h, h_l, t_h, t_l)
+		fmt.Println("--")
 	}
 
 	fmt.Println(h_map)
@@ -55,8 +56,8 @@ func part1(t *bufio.Scanner) {
 
 func addToMap(direction string, movement int, m map[string]int, t map[string]int, h_h, h_l, t_h, t_l int) (int, int, int, int) {
 
-	fmt.Println(h_h, h_l)
-	fmt.Println(t_h, t_l)
+	fmt.Printf("HEAD -- Horizontal: %d, Lateral: %d\n", h_h, h_l)
+	fmt.Printf("TAIL -- Horizontal: %d, Lateral: %d\n", t_h, t_l)
 
 	switch direction {
 	case "R":
@@ -66,6 +67,11 @@ func addToMap(direction string, movement int, m map[string]int, t map[string]int
 
 			if h_l-t_l == 2 {
 				t_l = h_l - 1
+				t_h = h_h
+				fmt.Println(t_h, t_l)
+				t[fmt.Sprintf("%d:%d", t_h, t_l)] = i
+			} else if h_l+t_l == 2 {
+				t_l = h_l + 1
 				t_h = h_h
 				fmt.Println(t_h, t_l)
 				t[fmt.Sprintf("%d:%d", t_h, t_l)] = i
@@ -80,6 +86,10 @@ func addToMap(direction string, movement int, m map[string]int, t map[string]int
 				t_l = h_l + 1
 				t_h = h_h
 				t[fmt.Sprintf("%d:%d", t_h, t_l)] = i
+			} else if t_l+h_l == 2 {
+				t_l = h_l - 1
+				t_h = h_h
+				t[fmt.Sprintf("%d:%d", t_h, t_l)] = i
 			}
 		}
 	case "U":
@@ -89,6 +99,10 @@ func addToMap(direction string, movement int, m map[string]int, t map[string]int
 
 			if h_h-t_h == 2 {
 				t_h = h_h - 1
+				t_l = h_l
+				t[fmt.Sprintf("%d:%d", t_h, t_l)] = i
+			} else if h_h+t_h == 2 {
+				t_h = h_h + 1
 				t_l = h_l
 				t[fmt.Sprintf("%d:%d", t_h, t_l)] = i
 			}
@@ -102,9 +116,16 @@ func addToMap(direction string, movement int, m map[string]int, t map[string]int
 				t_h = t_h + 1
 				t_l = h_l
 				t[fmt.Sprintf("%d:%d", t_h, t_l)] = i
+			} else if t_h+h_h == 2 {
+				t_h = t_h - 1
+				t_l = h_l
+				t[fmt.Sprintf("%d:%d", t_h, t_l)] = i
 			}
 		}
 
 	}
+
+	fmt.Printf("LEAVING HEAD -- Horizontal: %d, Lateral: %d\n", h_h, h_l)
+	fmt.Printf("LEAVINGTAIL -- Horizontal: %d, Lateral: %d\n", t_h, t_l)
 	return h_h, h_l, t_h, t_l
 }
