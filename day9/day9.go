@@ -26,46 +26,85 @@ func part1(t *bufio.Scanner) {
 		positions = append(positions, o)
 	}
 
-	var head_positions []string
-	tail_map := make(map[string]int)
+	h_map := make(map[string]int)
+	t_map := make(map[string]int)
 
-	head_horizontal := 0
-	head_lateral := 0
+	h_h := 0
+	h_l := 0
 
-	tail_horizontal := 0
-	tail_lateral := 0
+	t_h := 0
+	t_l := 0
+
+	h_map[fmt.Sprintf("%d:%d", h_h, h_l)] = t_h
+	t_map[fmt.Sprintf("%d:%d", t_h, t_l)] = t_h
 
 	for v := range positions {
 		s := strings.Split(positions[v][0], " ")
 		direction := s[0]
 		movement, _ := strconv.Atoi(s[1])
+		h_h, h_l, t_h, t_l = addToMap(direction, movement, h_map, t_map, h_h, h_l, t_h, t_l)
+	}
 
-		switch direction {
-		case "R":
-			head_lateral = head_lateral + movement
+	fmt.Println(h_map)
+	fmt.Println(len(h_map))
 
-		case "U":
-			head_horizontal = head_horizontal + movement
-			head_positions = append(head_positions, fmt.Sprintf("%d:%d", head_horizontal, head_lateral))
-		case "D":
-			head_horizontal = head_horizontal - movement
-			head_positions = append(head_positions, fmt.Sprintf("%d:%d", head_horizontal, head_lateral))
-		case "L":
-			head_lateral = head_lateral - movement
-			if head_lateral < 0 {
-				if head_lateral+2 == tail_lateral {
-					for i := 0; i >= head_lateral; i-- {
-						fmt.Println(i)
-						tail_map[fmt.Sprintf("%d:%d", tail_horizontal, head_lateral+1)] = head_lateral + 1
-					}
-				}
-			} else if head_lateral-2 == tail_lateral {
-				tail_map[fmt.Sprintf("%d:%d", tail_horizontal, tail_lateral)] = head_lateral
+	fmt.Println(t_map)
+	fmt.Println(len(t_map))
+
+}
+
+func addToMap(direction string, movement int, m map[string]int, t map[string]int, h_h, h_l, t_h, t_l int) (int, int, int, int) {
+
+	fmt.Println(h_h, h_l)
+	fmt.Println(t_h, t_l)
+
+	switch direction {
+	case "R":
+		for i := 1; i <= movement; i++ {
+			m[fmt.Sprintf("%d:%d", h_h, h_l+1)] = i
+			h_l = h_l + 1
+
+			if h_l-t_l == 2 {
+				t_l = h_l - 1
+				t_h = h_h
+				fmt.Println(t_h, t_l)
+				t[fmt.Sprintf("%d:%d", t_h, t_l)] = i
+			}
+		}
+	case "L":
+		for i := movement; i >= 1; i-- {
+			m[fmt.Sprintf("%d:%d", h_h, h_l-1)] = i
+			h_l = h_l - 1
+
+			if t_l-h_l == 2 {
+				t_l = h_l + 1
+				t_h = h_h
+				t[fmt.Sprintf("%d:%d", t_h, t_l)] = i
+			}
+		}
+	case "U":
+		for i := 1; i <= movement; i++ {
+			m[fmt.Sprintf("%d:%d", h_h+1, h_l)] = i
+			h_h = h_h + 1
+
+			if h_h-t_h == 2 {
+				t_h = h_h - 1
+				t_l = h_l
+				t[fmt.Sprintf("%d:%d", t_h, t_l)] = i
+			}
+		}
+	case "D":
+		for i := movement; i >= 1; i-- {
+			m[fmt.Sprintf("%d:%d", h_h-1, h_l)] = i
+			h_h = h_h - 1
+
+			if t_h-h_h == 2 {
+				t_h = t_h + 1
+				t_l = h_l
+				t[fmt.Sprintf("%d:%d", t_h, t_l)] = i
 			}
 		}
 
 	}
-
-	fmt.Println(tail_map)
-
+	return h_h, h_l, t_h, t_l
 }
