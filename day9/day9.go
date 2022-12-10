@@ -10,7 +10,7 @@ import (
 
 func main() {
 
-	open, _ := os.Open("input.txt")
+	open, _ := os.Open("test.txt")
 	txt := bufio.NewScanner(open)
 	part1(txt)
 
