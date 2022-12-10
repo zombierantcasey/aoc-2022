@@ -10,7 +10,7 @@ import (
 
 func main() {
 
-	open, _ := os.Open("test.txt")
+	open, _ := os.Open("input.txt")
 	txt := bufio.NewScanner(open)
 	part1(txt)
 
@@ -70,11 +70,6 @@ func addToMap(direction string, movement int, m map[string]int, t map[string]int
 				t_h = h_h
 				fmt.Println(t_h, t_l)
 				t[fmt.Sprintf("%d:%d", t_h, t_l)] = i
-			} else if h_l+t_l == 2 {
-				t_l = h_l + 1
-				t_h = h_h
-				fmt.Println(t_h, t_l)
-				t[fmt.Sprintf("%d:%d", t_h, t_l)] = i
 			}
 		}
 	case "L":
@@ -84,10 +79,6 @@ func addToMap(direction string, movement int, m map[string]int, t map[string]int
 
 			if t_l-h_l == 2 {
 				t_l = h_l + 1
-				t_h = h_h
-				t[fmt.Sprintf("%d:%d", t_h, t_l)] = i
-			} else if t_l+h_l == 2 {
-				t_l = h_l - 1
 				t_h = h_h
 				t[fmt.Sprintf("%d:%d", t_h, t_l)] = i
 			}
@@ -101,10 +92,6 @@ func addToMap(direction string, movement int, m map[string]int, t map[string]int
 				t_h = h_h - 1
 				t_l = h_l
 				t[fmt.Sprintf("%d:%d", t_h, t_l)] = i
-			} else if h_h+t_h == 2 {
-				t_h = h_h + 1
-				t_l = h_l
-				t[fmt.Sprintf("%d:%d", t_h, t_l)] = i
 			}
 		}
 	case "D":
@@ -114,10 +101,6 @@ func addToMap(direction string, movement int, m map[string]int, t map[string]int
 
 			if t_h-h_h == 2 {
 				t_h = t_h + 1
-				t_l = h_l
-				t[fmt.Sprintf("%d:%d", t_h, t_l)] = i
-			} else if t_h+h_h == 2 {
-				t_h = t_h - 1
 				t_l = h_l
 				t[fmt.Sprintf("%d:%d", t_h, t_l)] = i
 			}
