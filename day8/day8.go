@@ -83,7 +83,6 @@ func returnTreeScore(row, position int, trees [][]int) int {
 	up_row := row
 	left_check := position
 	right_check := position
-
 	down_distance := 0
 	up_distance := 0
 	right_distance := 0
@@ -104,11 +103,8 @@ func returnTreeScore(row, position int, trees [][]int) int {
 		if down_row == 0 {
 			break
 		}
-
 	}
-
 	for {
-
 		up_row++
 		if trees[up_row][position] > trees[row][position] {
 			up_distance++
@@ -119,15 +115,11 @@ func returnTreeScore(row, position int, trees [][]int) int {
 		} else {
 			up_distance++
 		}
-
 		if up_row == len(trees)-1 {
 			break
 		}
-
 	}
-
 	for {
-
 		left_check--
 		if trees[row][left_check] > trees[row][position] {
 			left_distance++
@@ -138,15 +130,11 @@ func returnTreeScore(row, position int, trees [][]int) int {
 		} else {
 			left_distance++
 		}
-
 		if left_check == 0 {
 			break
 		}
-
 	}
-
 	for {
-
 		right_check++
 		if trees[row][right_check] > trees[row][position] {
 			right_distance++
@@ -157,18 +145,14 @@ func returnTreeScore(row, position int, trees [][]int) int {
 		} else {
 			right_distance++
 		}
-
 		if right_check == len(trees[row])-1 {
 			break
 		}
 	}
-
 	return up_distance * down_distance * right_distance * left_distance
-
 }
 
 func checkAllOtherTrees(row, position int, trees [][]int) bool {
-
 	down_row := row
 	up_row := row
 	left_check := position
@@ -179,41 +163,30 @@ func checkAllOtherTrees(row, position int, trees [][]int) bool {
 		if trees[down_row][position] >= trees[row][position] {
 			break
 		}
-
 		if down_row == 0 {
 			return true
 		}
-
 	}
-
 	for {
-
 		up_row++
 		if trees[up_row][position] >= trees[row][position] {
 			break
 		}
-
 		if up_row == len(trees)-1 {
 			return true
 		}
 
 	}
-
 	for {
-
 		left_check--
 		if trees[row][left_check] >= trees[row][position] {
 			break
 		}
-
 		if left_check == 0 {
 			return true
 		}
-
 	}
-
 	for {
-
 		right_check++
 		if trees[row][right_check] >= trees[row][position] {
 			break
@@ -223,7 +196,5 @@ func checkAllOtherTrees(row, position int, trees [][]int) bool {
 			return true
 		}
 	}
-
 	return false
-
 }
