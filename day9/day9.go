@@ -8,11 +8,14 @@ import (
 	"strings"
 )
 
+//Had some trouble with this problem. Re-wrote it in OOP design because I originally wrote it like a degenerate idiot, and it was very hard to
+//read when troubleshooting.
+
 func main() {
 
 	open, _ := os.Open("input.txt")
 	txt := bufio.NewScanner(open)
-	part1(txt)
+	part1_and_2(txt)
 
 }
 
@@ -28,7 +31,6 @@ type Rope struct {
 }
 
 func (r *Rope) absoluteNum(n int) int {
-
 	if n < 0 {
 		return -n
 	}
@@ -43,14 +45,14 @@ func (r *Rope) moveHead(direction string) {
 	case "L":
 		r.Head.x--
 	case "U":
-		r.Head.y++
-	case "D":
 		r.Head.y--
+	case "D":
+		r.Head.y++
 	}
 	r.head_visited[fmt.Sprintf("%d:%d", r.Head.x, r.Head.y)] = direction
 }
 
-func (r *Rope) moveTail(direction string) {
+func (r *Rope) moveTail(direction, movement string) {
 
 	diff_1 := r.absoluteNum(r.Head.x - r.Tail.x)
 	diff_2 := r.absoluteNum(r.Head.y - r.Tail.y)
@@ -60,48 +62,48 @@ func (r *Rope) moveTail(direction string) {
 			r.Tail.x--
 			a := r.Head.y - r.Tail.y
 			r.Tail.y = r.Tail.y + a
-			r.tail_visited[fmt.Sprintf("%d:%d", r.Tail.x, r.Tail.y)] = direction
+			r.tail_visited[fmt.Sprintf("%d:%d", r.Tail.x, r.Tail.y)] = fmt.Sprintf(" %s%s", direction, movement)
 		}
 		if r.Head.x == r.Tail.x+2 {
 			r.Tail.x++
 			a := r.Head.y - r.Tail.y
 			r.Tail.y = r.Tail.y + a
-			r.tail_visited[fmt.Sprintf("%d:%d", r.Tail.x, r.Tail.y)] = direction
+			r.tail_visited[fmt.Sprintf("%d:%d", r.Tail.x, r.Tail.y)] = fmt.Sprintf(" %s%s", direction, movement)
 		}
 		if r.Head.y == r.Tail.y-2 {
 			r.Tail.y--
 			a := r.Head.x - r.Tail.x
 			r.Tail.x = r.Tail.x + a
-			r.tail_visited[fmt.Sprintf("%d:%d", r.Tail.x, r.Tail.y)] = direction
+			r.tail_visited[fmt.Sprintf("%d:%d", r.Tail.x, r.Tail.y)] = fmt.Sprintf(" %s%s", direction, movement)
 		}
 		if r.Head.y == r.Tail.y+2 {
 			r.Tail.y++
 			a := r.Head.x - r.Tail.x
 			r.Tail.x = r.Tail.x + a
-			r.tail_visited[fmt.Sprintf("%d:%d", r.Tail.x, r.Tail.y)] = direction
+			r.tail_visited[fmt.Sprintf("%d:%d", r.Tail.x, r.Tail.y)] = fmt.Sprintf(" %s%s", direction, movement)
 		}
 
 	} else if diff_1 > 1 || diff_2 > 1 {
 		if r.Head.x == r.Tail.x-2 {
 			r.Tail.x--
-			r.tail_visited[fmt.Sprintf("%d:%d", r.Tail.x, r.Tail.y)] = direction
+			r.tail_visited[fmt.Sprintf("%d:%d", r.Tail.x, r.Tail.y)] = fmt.Sprintf(" %s%s", direction, movement)
 		}
 		if r.Head.x == r.Tail.x+2 {
 			r.Tail.x++
-			r.tail_visited[fmt.Sprintf("%d:%d", r.Tail.x, r.Tail.y)] = direction
+			r.tail_visited[fmt.Sprintf("%d:%d", r.Tail.x, r.Tail.y)] = fmt.Sprintf(" %s%s", direction, movement)
 		}
 		if r.Head.y == r.Tail.y-2 {
 			r.Tail.y--
-			r.tail_visited[fmt.Sprintf("%d:%d", r.Tail.x, r.Tail.y)] = direction
+			r.tail_visited[fmt.Sprintf("%d:%d", r.Tail.x, r.Tail.y)] = fmt.Sprintf(" %s%s", direction, movement)
 		}
 		if r.Head.y == r.Tail.y+2 {
 			r.Tail.y++
-			r.tail_visited[fmt.Sprintf("%d:%d", r.Tail.x, r.Tail.y)] = direction
+			r.tail_visited[fmt.Sprintf("%d:%d", r.Tail.x, r.Tail.y)] = fmt.Sprintf(" %s%s", direction, movement)
 		}
 	}
 }
 
-func part1(t *bufio.Scanner) {
+func part1_and_2(t *bufio.Scanner) {
 
 	var positions [][]string
 
@@ -111,41 +113,47 @@ func part1(t *bufio.Scanner) {
 		positions = append(positions, o)
 	}
 
-	headPosition := Position{
-		x: 0,
-		y: 0,
+	var ropeKnots []Rope
+
+	for i := 1; i < 10; i++ {
+		r := Rope{Head: Position{x: 0, y: 0},
+			Tail:         Position{x: 0, y: 0},
+			head_visited: make(map[string]string),
+			tail_visited: make(map[string]string)}
+		ropeKnots = append(ropeKnots, r)
 	}
 
-	tailPosition := Position{
-		x: 0,
-		y: 0,
-	}
-
-	head_visited := make(map[string]string)
-	tail_visited := make(map[string]string)
-
-	rope := Rope{
-		Head:         headPosition,
-		Tail:         tailPosition,
-		head_visited: head_visited,
-		tail_visited: tail_visited,
-	}
+	v_2_tail_visited := make(map[string]string)
 
 	for v := range positions {
 		if v == 0 {
-			head_visited["0:0"] = "S"
-			tail_visited["0:0"] = "S"
+			for r := range ropeKnots {
+				ropeKnots[r].head_visited["0:0"] = "S"
+				ropeKnots[r].tail_visited["0:0"] = "S"
+			}
 		}
 		s := strings.Split(positions[v][0], " ")
 		movement, _ := strconv.Atoi(s[1])
 
 		for i := 1; i <= movement; i++ {
-			rope.moveHead(s[0])
-			rope.moveTail(s[0])
-		}
+			for r := range ropeKnots {
+				if r == 0 {
+					ropeKnots[r].moveHead(s[0])
+					ropeKnots[r].moveTail(s[0], s[1])
+					continue
+				}
+				ropeKnots[r].Head = ropeKnots[r-1].Tail
+				ropeKnots[r].moveTail(s[0], s[1])
+				if r == 8 {
+					v_2_tail_visited[fmt.Sprintf("%d:%d", ropeKnots[r].Tail.x, ropeKnots[r].Tail.y)] = fmt.Sprintf(" %s%d", s[0], movement)
+				}
 
+			}
+
+		}
 	}
 
-	fmt.Println(len(rope.tail_visited))
+	fmt.Println(len(ropeKnots[0].tail_visited)) //part 1
+	fmt.Println(len(v_2_tail_visited))          //part 2
 
 }
