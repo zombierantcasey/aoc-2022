@@ -22,7 +22,6 @@ func part1(t *bufio.Scanner) {
 	next_tick := make(chan bool)
 	var interval_values []int
 	interval_cycles := []int{20, 60, 100, 140, 180, 220}
-
 	wg := new(sync.WaitGroup)
 
 	for t.Scan() {
@@ -32,15 +31,13 @@ func part1(t *bufio.Scanner) {
 		next_tick <- true
 
 	}
-
 	go func() {
 		wg.Wait()
-		fmt.Println(interval_values)
 		var sum int
 		for v := range interval_values {
 			sum = interval_values[v] + sum
 		}
-		fmt.Println(sum)
+		fmt.Println(sum) //part 1
 	}()
 
 	for {
@@ -49,7 +46,6 @@ func part1(t *bufio.Scanner) {
 }
 
 func executeProgramLine(receive chan bool, values string, cycle, x, process_counter *int, wg *sync.WaitGroup, interval_values *[]int, interval_cycles []int) {
-
 	defer wg.Done()
 	s := strings.Split(values, " ")
 	var cycles int
