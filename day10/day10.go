@@ -18,7 +18,6 @@ func main() {
 func part1(t *bufio.Scanner) {
 	x := 1
 	clock_tick := 1
-	var process_counter int
 	next_tick := make(chan bool)
 	var interval_values []int
 	interval_cycles := []int{20, 60, 100, 140, 180, 220}
@@ -26,11 +25,11 @@ func part1(t *bufio.Scanner) {
 
 	for t.Scan() {
 		n := t.Text()
-		go executeProgramLine(next_tick, n, &clock_tick, &x, &process_counter, wg, &interval_values, interval_cycles)
+		go executeProgramLine(next_tick, n, &clock_tick, &x, wg, &interval_values, interval_cycles)
 		wg.Add(1)
 		next_tick <- true
-
 	}
+
 	go func() {
 		wg.Wait()
 		var sum int
@@ -38,6 +37,7 @@ func part1(t *bufio.Scanner) {
 			sum = interval_values[v] + sum
 		}
 		fmt.Println(sum) //part 1
+		os.Exit(3)
 	}()
 
 	for {
@@ -45,7 +45,7 @@ func part1(t *bufio.Scanner) {
 	}
 }
 
-func executeProgramLine(receive chan bool, values string, cycle, x, process_counter *int, wg *sync.WaitGroup, interval_values *[]int, interval_cycles []int) {
+func executeProgramLine(receive chan bool, values string, cycle, x *int, wg *sync.WaitGroup, interval_values *[]int, interval_cycles []int) {
 	defer wg.Done()
 	s := strings.Split(values, " ")
 	var cycles int
@@ -58,8 +58,8 @@ func executeProgramLine(receive chan bool, values string, cycle, x, process_coun
 		for v := range interval_cycles {
 			if interval_cycles[v] == *cycle-1 {
 				c := *cycle - 1
-
 				*interval_values = append(*interval_values, *x*c)
+				break
 			}
 		}
 	} else {
@@ -77,6 +77,7 @@ func executeProgramLine(receive chan bool, values string, cycle, x, process_coun
 				if interval_cycles[v] == *cycle {
 					c := *cycle
 					*interval_values = append(*interval_values, *x*c)
+					break
 				}
 			}
 			break
@@ -87,11 +88,10 @@ func executeProgramLine(receive chan bool, values string, cycle, x, process_coun
 				if interval_cycles[v] == *cycle {
 					c := *cycle
 					*interval_values = append(*interval_values, *x*c)
+					break
 				}
 			}
 			break
 		}
-
 	}
-
 }
