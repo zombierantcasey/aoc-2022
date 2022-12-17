@@ -42,11 +42,6 @@ func part1(t *bufio.Scanner) {
 	}()
 
 	for {
-		if position > 40 {
-			position = 0
-			fmt.Println()
-		}
-		position++
 		next_tick <- true
 	}
 }
