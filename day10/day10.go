@@ -22,10 +22,11 @@ func part1(t *bufio.Scanner) {
 	var interval_values []int
 	interval_cycles := []int{20, 60, 100, 140, 180, 220}
 	wg := new(sync.WaitGroup)
+	var position int
 
 	for t.Scan() {
 		n := t.Text()
-		go executeProgramLine(next_tick, n, &clock_tick, &x, wg, &interval_values, interval_cycles)
+		go executeProgramLine(next_tick, n, &clock_tick, &x, &position, wg, &interval_values, interval_cycles)
 		wg.Add(1)
 		next_tick <- true
 	}
@@ -41,20 +42,29 @@ func part1(t *bufio.Scanner) {
 	}()
 
 	for {
+		if position > 40 {
+			position = 0
+			fmt.Println()
+		}
+		position++
 		next_tick <- true
 	}
 }
 
-func executeProgramLine(receive chan bool, values string, cycle, x *int, wg *sync.WaitGroup, interval_values *[]int, interval_cycles []int) {
+func executeProgramLine(receive chan bool, values string, cycle, x, position *int, wg *sync.WaitGroup, interval_values *[]int, interval_cycles []int) {
 	defer wg.Done()
 	s := strings.Split(values, " ")
 	var cycles int
 	var increase_value int
 
 	if len(s) > 1 {
+		if *cycle == 1 {
+			draw(position, x)
+		}
 		*cycle = *cycle + 2
 		cycles = 2
 		increase_value, _ = strconv.Atoi(s[1])
+		draw(position, x)
 		for v := range interval_cycles {
 			if interval_cycles[v] == *cycle-1 {
 				c := *cycle - 1
@@ -71,6 +81,7 @@ func executeProgramLine(receive chan bool, values string, cycle, x *int, wg *syn
 	if t && cycles != 0 {
 		cycles--
 	} else {
+		draw(position, x)
 		for v := range interval_cycles {
 			if interval_cycles[v] == *cycle {
 				c := *cycle
@@ -89,6 +100,21 @@ func executeProgramLine(receive chan bool, values string, cycle, x *int, wg *syn
 				break
 			}
 		}
+		draw(position, x)
 		return
 	}
+}
+
+//part2
+func draw(position, cycle *int) {
+	if *position >= 40 {
+		*position = 0
+		fmt.Println()
+	}
+	if *position+1 == *cycle || *position-1 == *cycle || *position == *cycle {
+		fmt.Print("#")
+	} else {
+		fmt.Print(".")
+	}
+	*position++
 }
