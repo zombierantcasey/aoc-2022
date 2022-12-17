@@ -12,10 +12,10 @@ import (
 func main() {
 	open, _ := os.Open("input.txt")
 	txt := bufio.NewScanner(open)
-	part1(txt)
+	part1_and_2(txt)
 }
 
-func part1(t *bufio.Scanner) {
+func part1_and_2(t *bufio.Scanner) {
 	x := 1
 	clock_tick := 1
 	next_tick := make(chan bool)
@@ -38,7 +38,7 @@ func part1(t *bufio.Scanner) {
 			sum = interval_values[v] + sum
 		}
 		fmt.Println(sum) //part 1
-		os.Exit(1)       //bad thread management. channel deadlock will occur here unless I force an exit
+		os.Exit(1)       //bad thread management. channel deadlock will occur here unless I force an exit. additionally, 1 in 10 runs will generate the wrong total for part 1.
 	}()
 
 	for {
@@ -96,12 +96,10 @@ func executeProgramLine(receive chan bool, values string, cycle, x, position *in
 			}
 		}
 		draw(position, x)
-		return
 	}
 }
 
-//part2
-func draw(position, cycle *int) {
+func draw(position, cycle *int) { //part2
 	if *position >= 40 {
 		*position = 0
 		fmt.Println()
