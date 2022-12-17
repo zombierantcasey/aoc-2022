@@ -37,7 +37,7 @@ func part1(t *bufio.Scanner) {
 			sum = interval_values[v] + sum
 		}
 		fmt.Println(sum) //part 1
-		os.Exit(3)
+		os.Exit(1)       //bad thread management. channel deadlock will occur here unless I force an exit
 	}()
 
 	for {
@@ -65,33 +65,30 @@ func executeProgramLine(receive chan bool, values string, cycle, x *int, wg *syn
 	} else {
 		cycles = 1
 		*cycle++
-		increase_value = 0
 	}
 	cycles--
-	for {
-		t := <-receive
-		if t && cycles != 0 {
-			cycles--
-		} else {
-			for v := range interval_cycles {
-				if interval_cycles[v] == *cycle {
-					c := *cycle
-					*interval_values = append(*interval_values, *x*c)
-					break
-				}
+	t := <-receive
+	if t && cycles != 0 {
+		cycles--
+	} else {
+		for v := range interval_cycles {
+			if interval_cycles[v] == *cycle {
+				c := *cycle
+				*interval_values = append(*interval_values, *x*c)
+				return
 			}
-			break
 		}
-		if cycles == 0 {
-			*x = *x + increase_value
-			for v := range interval_cycles {
-				if interval_cycles[v] == *cycle {
-					c := *cycle
-					*interval_values = append(*interval_values, *x*c)
-					break
-				}
+		return
+	}
+	if cycles == 0 {
+		*x = *x + increase_value
+		for v := range interval_cycles {
+			if interval_cycles[v] == *cycle {
+				c := *cycle
+				*interval_values = append(*interval_values, *x*c)
+				break
 			}
-			break
 		}
+		return
 	}
 }
