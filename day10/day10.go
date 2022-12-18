@@ -15,6 +15,10 @@ func main() {
 	part1_and_2(txt)
 }
 
+//this is generally a bad solution because you can't guarantee when a routine will write/end, which means that while most of the time
+//the answers to either part are correct, there's a small chance that both part 1 and part 2 may be incorrect
+//it's not a concern for a problem like this, but is clearly unacceptable for normal applications.
+
 func part1_and_2(t *bufio.Scanner) {
 	x := 1
 	clock_tick := 1
