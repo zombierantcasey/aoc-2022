@@ -16,8 +16,10 @@ func main() {
 }
 
 //this is generally a bad solution because you can't guarantee when a routine will write/end, which means that while most of the time
-//the answers to either part are correct, there's a small chance that both part 1 and part 2 may be incorrect
-//it's not a concern for a problem like this, but is clearly unacceptable for normal applications.
+//the answers to either parts are correct, there's a small chance that both part 1 and part 2 will be incorrect.
+//it's not a concern for a problem like this, but is clearly unacceptable for normal applications. it's far easier to solve this problem
+//without threads -- but if you're to use threads, don't create an infinite loop after a threaded Wait() call like I did. that's insane.
+//you will always experience issues because channels are either closed or asleep.
 
 func part1_and_2(t *bufio.Scanner) {
 	x := 1
@@ -42,7 +44,7 @@ func part1_and_2(t *bufio.Scanner) {
 			sum = interval_values[v] + sum
 		}
 		fmt.Println(sum) //part 1
-		os.Exit(1)       //bad thread management. channel deadlock will occur here unless I force an exit. additionally, 1 in 10 runs will generate the wrong total for part 1.
+		os.Exit(1)       //bad thread management. channel deadlock will occur here unless I force an exit. additionally, 1 in 10 runs will generate the wrong total for part 1 & 2.
 	}()
 
 	for {
